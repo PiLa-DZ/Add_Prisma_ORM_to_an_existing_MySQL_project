@@ -1,22 +1,28 @@
-1. Set up Prisma ORM
-npm install prisma @types/node --save-dev
-npm install @prisma/client @prisma/adapter-mariadb dotenv
+### 1. Set up Prisma ORM
+```Bash
+npm install prisma --save-dev
+npm install @types/node --save-dev
 
-### Here's what each package does:
+npm install @prisma/client
+npm install @prisma/adapter-mariadb
+npm install dotenv
+```
+
+- Here's what each package does:
     1. prisma - The Prisma CLI for running commands like prisma init, prisma db pull, and prisma generate
     2. @prisma/client - The Prisma Client library for querying your database
     3. @prisma/adapter-mariadb - The MySQL/MariaDB driver adapter that connects Prisma Client to your database
     4. dotenv - Loads environment variables from your .env file
 
-2. Initialize Prisma ORM
-npx prisma init --datasource-provider mysql --output ../generated/prisma
-### This command does a few things:
+### 2. Initialize Prisma ORM
+- npx prisma init --datasource-provider mysql --output ../generated/prisma
+- This command does a few things:
     1. Creates a prisma/ directory with a schema.prisma file containing your database connection configuration
     2. Creates a .env file in the root directory for environment variables
     2. Creates a prisma.config.ts file for Prisma configuration
 
-3. Connect your database
-### Update the .env file with your MySQL connection string details:
+### 3. Connect your database
+- Update the .env file with your MySQL connection string details:
 ```.env
 DATABASE_URL="mysql://username:password@localhost:3306/mydb"
 //add-start
@@ -27,13 +33,13 @@ DATABASE_HOST="localhost"
 DATABASE_PORT=3306
 //add-end
 ```
-### Replace the placeholders with your actual database credentials:
+- Replace the placeholders with your actual database credentials:
     1. username: Your MySQL username
     2. password: Your MySQL password
     3. localhost:3306: Your MySQL host and port
     4. mydb: Your database name
 
-4. Introspect your database
+### 4. Introspect your database
 - NOTE: Step 1: You have to create database and tables
 ```Bash
 mysql -u admin -pyour_password
@@ -68,11 +74,13 @@ INSERT INTO enrollments (student_id, course_id) VALUES (1, 1), (1, 2);
 INSERT INTO enrollments (student_id, course_id) VALUES (2, 2), (2, 3);
 ```
 - NOTE: Step 2: Run the following command to introspect your existing database:
+```Bash
 npx prisma db pull
-This command reads the DATABASE_URL environment variable, connects to your database, and introspects the database schema. It then translates the database schema from SQL into a data model in your Prisma schema.
+```
+- This command reads the DATABASE_URL environment variable, connects to your database, and introspects the database schema. It then translates the database schema from SQL into a data model in your Prisma schema.
 
-5. Baseline your database
-To use Prisma Migrate with your existing database, you need to baseline your database.
+### 5. Baseline your database
+- To use Prisma Migrate with your existing database, you need to baseline your database.
 
     1. First, create a migrations directory:
     ```Bash
@@ -83,24 +91,24 @@ To use Prisma Migrate with your existing database, you need to baseline your dat
     ```Bash
     npx prisma migrate diff --from-empty --to-schema prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql
     ```
+        - Review the generated migration file to ensure it matches your database schema.
 
-    - Review the generated migration file to ensure it matches your database schema.
     3. Then, mark the migration as applied:
     ```Bash
     npx prisma migrate resolve --applied 0_init
     ```
 
-You now have a baseline for your current database schema.
+- You now have a baseline for your current database schema.
 
-6. Generate Prisma ORM types
-Generate Prisma Client based on your introspected schema:
+### 6. Generate Prisma ORM types
+- Generate Prisma Client based on your introspected schema:
 ```Bash
 npx prisma generate
 ```
-This creates a type-safe Prisma Client tailored to your database schema in the generated/prisma directory.
+- This creates a type-safe Prisma Client tailored to your database schema in the generated/prisma directory.
 
-7. Instantiate Prisma Client
-Create a utility file to instantiate Prisma Client. You need to pass an instance of Prisma ORM's driver adapter to the PrismaClient constructor:
+### 7. Instantiate Prisma Client
+- Create a utility file to instantiate Prisma Client. You need to pass an instance of Prisma ORM's driver adapter to the PrismaClient constructor:
 ```Bash
 mkdir lib
 touch prisma.ts
@@ -121,8 +129,8 @@ const prisma = new PrismaClient({ adapter });
 
 export { prisma }
 ```
-8. Query your database
-Now you can use Prisma Client to query your database. Create a script.ts file:
+### 8. Query your database
+- Now you can use Prisma Client to query your database. Create a script.ts file:
 ```Bash
 touch script.ts
 ```
@@ -146,7 +154,7 @@ main()
     process.exit(1)
   })
 ```
-Run the script:
+- Run the script:
 ```Bash
 npx tsx script.ts
 # Output: ===============================
@@ -165,11 +173,11 @@ npx tsx script.ts
 # ]
 ```
 
-9. Evolve your schema
-To make changes to your database schema:
+### 9. Evolve your schema
+- To make changes to your database schema:
 
-9.1. Update your Prisma schema file
-Update your Prisma schema file to reflect the changes you want to make to your database schema. For example, add a new model:
+#### 9.1. Update your Prisma schema file
+- Update your Prisma schema file to reflect the changes you want to make to your database schema. For example, add a new model:
 ```Bash
 nvim prisma/schema.prisma
 ```
@@ -191,7 +199,7 @@ model User {
 }
 ```
 
-9.2. Create and apply a migration:
+#### 9.2. Create and apply a migration:
 ```Bash
 npx prisma migrate dev --name your_migration_name
 ```
@@ -200,9 +208,9 @@ npx prisma migrate dev --name your_migration_name
     2. Apply the migration to your database
     3. Regenerate Prisma Client
 
-10. Explore your data with Prisma Studio
-Prisma Studio is a visual editor for your database. Launch it with:
+### 10. Explore your data with Prisma Studio
+- Prisma Studio is a visual editor for your database. Launch it with:
 ```Bash
 npx prisma studio
 ```
-This opens a web interface where you can view and edit your data.
+- This opens a web interface where you can view and edit your data.
