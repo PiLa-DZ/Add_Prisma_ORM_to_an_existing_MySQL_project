@@ -92,3 +92,11 @@ To use Prisma Migrate with your existing database, you need to baseline your dat
 
 You now have a baseline for your current database schema.
 
+6. Generate Prisma ORM types
+Generate Prisma Client based on your introspected schema:
+```Bash
+npx prisma generate
+```
+This creates a type-safe Prisma Client tailored to your database schema in the generated/prisma directory.
+
+
