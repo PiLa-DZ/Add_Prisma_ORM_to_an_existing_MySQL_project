@@ -32,3 +32,41 @@ DATABASE_PORT=3306
     2. password: Your MySQL password
     3. localhost:3306: Your MySQL host and port
     4. mydb: Your database name
+
+4. Introspect your database
+- NOTE: Step 1: You have to create database and tables
+```Bash
+mysql -u admin -pyour_password
+```
+```MySQL
+create database db1;
+use db1;
+CREATE TABLE students (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL
+);
+CREATE TABLE courses (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(100) NOT NULL
+);
+-- The Junction Table (The "Bridge")
+CREATE TABLE enrollments (
+    student_id INT,
+    course_id INT,
+    enrolled_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    -- Composite Primary Key (Prevents a student from enrolling in the same course twice)
+    PRIMARY KEY (student_id, course_id),
+    -- Foreign Keys
+    CONSTRAINT fk_student FOREIGN KEY (student_id) REFERENCES students(id) ON DELETE CASCADE,
+    CONSTRAINT fk_course FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+);
+INSERT INTO students (name) VALUES ('Ahmed'), ('Sara');
+INSERT INTO courses (title) VALUES ('Database Design'), ('Web Development'), ('UI/UX');
+-- Ahmed (1) takes Database (1) and Web (2)
+INSERT INTO enrollments (student_id, course_id) VALUES (1, 1), (1, 2);
+-- Sara (2) takes Web (2) and UI/UX (3)
+INSERT INTO enrollments (student_id, course_id) VALUES (2, 2), (2, 3);
+```
+- NOTE: Step 2: Run the following command to introspect your existing database:
+npx prisma db pull
+This command reads the DATABASE_URL environment variable, connects to your database, and introspects the database schema. It then translates the database schema from SQL into a data model in your Prisma schema.

@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -11,4 +5,27 @@ generator client {
 
 datasource db {
   provider = "mysql"
+}
+
+model courses {
+  id          Int           @id @default(autoincrement())
+  title       String        @db.VarChar(100)
+  enrollments enrollments[]
+}
+
+model enrollments {
+  student_id  Int
+  course_id   Int
+  enrolled_at DateTime? @default(now()) @db.DateTime(0)
+  courses     courses   @relation(fields: [course_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_course")
+  students    students  @relation(fields: [student_id], references: [id], onDelete: Cascade, onUpdate: Restrict, map: "fk_student")
+
+  @@id([student_id, course_id])
+  @@index([course_id], map: "fk_course")
+}
+
+model students {
+  id          Int           @id @default(autoincrement())
+  name        String        @db.VarChar(100)
+  enrollments enrollments[]
 }
