@@ -191,4 +191,11 @@ model User {
 }
 ```
 
-
+9.2. Create and apply a migration:
+```Bash
+npx prisma migrate dev --name your_migration_name
+```
+- This command will:
+    1. Create a new SQL migration file
+    2. Apply the migration to your database
+    3. Regenerate Prisma Client
