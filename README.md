@@ -121,4 +121,47 @@ const prisma = new PrismaClient({ adapter });
 
 export { prisma }
 ```
+8. Query your database
+Now you can use Prisma Client to query your database. Create a script.ts file:
+```Bash
+touch script.ts
+```
+```TS
+import { prisma } from './lib/prisma'
+
+async function main() {
+  // Example: Fetch all records from a table
+  // Replace 'user' with your actual model name
+  const allUsers = await prisma.students.findMany()
+  console.log('All users:', JSON.stringify(allUsers, null, 2))
+}
+
+main()
+  .then(async () => {
+    await prisma.$disconnect()
+  })
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
+```
+Run the script:
+```Bash
+npx tsx script.ts
+# Output: ===============================
+# Need to install the following packages:
+# tsx@4.21.0
+# Ok to proceed? (y) y
+# All users: [
+#   {
+#     "id": 1,
+#     "name": "Ahmed"
+#   },
+#   {
+#     "id": 2,
+#     "name": "Sara"
+#   }
+# ]
+```
 
