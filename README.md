@@ -168,7 +168,27 @@ npx tsx script.ts
 9. Evolve your schema
 To make changes to your database schema:
 
+9.1. Update your Prisma schema file
+Update your Prisma schema file to reflect the changes you want to make to your database schema. For example, add a new model:
+```Bash
+nvim prisma/schema.prisma
+```
+```Prisma
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  Int
+  author    User     @relation(fields: [authorId], references: [id])
+}
 
-
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String?
+  posts Post[]
+}
+```
 
 
