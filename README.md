@@ -165,3 +165,10 @@ npx tsx script.ts
 # ]
 ```
 
+9. Evolve your schema
+To make changes to your database schema:
+
+
+
+
+
