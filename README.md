@@ -199,3 +199,10 @@ npx prisma migrate dev --name your_migration_name
     1. Create a new SQL migration file
     2. Apply the migration to your database
     3. Regenerate Prisma Client
+
+10. Explore your data with Prisma Studio
+Prisma Studio is a visual editor for your database. Launch it with:
+```Bash
+npx prisma studio
+```
+This opens a web interface where you can view and edit your data.
