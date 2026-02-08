@@ -70,3 +70,25 @@ INSERT INTO enrollments (student_id, course_id) VALUES (2, 2), (2, 3);
 - NOTE: Step 2: Run the following command to introspect your existing database:
 npx prisma db pull
 This command reads the DATABASE_URL environment variable, connects to your database, and introspects the database schema. It then translates the database schema from SQL into a data model in your Prisma schema.
+
+5. Baseline your database
+To use Prisma Migrate with your existing database, you need to baseline your database.
+
+    1. First, create a migrations directory:
+    ```Bash
+    mkdir -p prisma/migrations/0_init
+    ```
+
+    2. Next, generate the migration file with prisma migrate diff:
+    ```Bash
+    npx prisma migrate diff --from-empty --to-schema prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql
+    ```
+
+    - Review the generated migration file to ensure it matches your database schema.
+    3. Then, mark the migration as applied:
+    ```Bash
+    npx prisma migrate resolve --applied 0_init
+    ```
+
+You now have a baseline for your current database schema.
+
